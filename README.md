@@ -1,73 +1,86 @@
-# Welcome to your Lovable project
+# AltraChat - AI Assistant
 
-## Project info
+**Created by Mr. Masum Ahmed**  
+**Powered by AltraCloud**
 
-**URL**: https://lovable.dev/projects/32b91732-71f4-4676-bb02-a535ba14d755
+AltraChat is a powerful AI assistant application with three core capabilities:
+- 💬 **AI Chat** - Intelligent conversations powered by advanced AI
+- 🎨 **Image Generation** - Create stunning visuals from text descriptions
+- 💻 **Code Assistant** - Expert help with programming tasks
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Google Authentication** - Secure sign-in with Google accounts via Firebase
+- **Real-time AI Chat** - Stream responses from advanced AI models
+- **Image Generation** - Generate high-quality images using AI
+- **Code Assistance** - Get expert help with coding questions
+- **Beautiful UI** - Modern design with purple-blue gradients and smooth animations
+- **Responsive Design** - Works perfectly on desktop and mobile devices
 
-**Use Lovable**
+## Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/32b91732-71f4-4676-bb02-a535ba14d755) and start prompting.
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **Backend**: Lovable Cloud (Supabase)
+- **AI**: Lovable AI Gateway (Google Gemini models)
+- **Authentication**: Firebase Google Auth
+- **UI Components**: shadcn/ui
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+1. **Sign in** with your Google account
+2. **Choose a mode**:
+   - Chat: Ask questions, get help, have conversations
+   - Image: Describe images you want to create
+   - Code: Get coding help and solutions
+3. **Start chatting!**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Development
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+This project is built with [Lovable](https://lovable.dev) and uses:
+- Lovable Cloud for backend infrastructure
+- Lovable AI for AI capabilities (no API keys needed!)
+- Firebase for Google authentication
 
-Follow these steps:
+## Project Structure
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```
+src/
+├── components/
+│   ├── Header.tsx          # App header with user info
+│   ├── LandingPage.tsx     # Welcome page with branding
+│   ├── ChatInterface.tsx   # Main chat UI
+│   └── ui/                 # shadcn UI components
+├── lib/
+│   └── firebase.ts         # Firebase configuration
+└── pages/
+    └── Index.tsx           # Main app page
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+supabase/
+└── functions/
+    └── chat-ai/           # Edge function for AI processing
 ```
 
-**Edit a file directly in GitHub**
+## AI Capabilities
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+AltraChat uses Lovable AI Gateway with:
+- **google/gemini-2.5-flash** for chat and coding assistance
+- **google/gemini-2.5-flash-image-preview** for image generation
 
-**Use GitHub Codespaces**
+## Design System
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The app features a custom design system with:
+- Deep purple to blue gradients
+- Dark theme optimized for AI interfaces
+- Smooth animations and transitions
+- Glassmorphism effects
+- Responsive layouts
 
-## What technologies are used for this project?
+## Credits
 
-This project is built with:
+- **Creator**: Mr. Masum Ahmed
+- **Company**: AltraCloud
+- **Platform**: Lovable
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/32b91732-71f4-4676-bb02-a535ba14d755) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built with ❤️ using [Lovable](https://lovable.dev)
