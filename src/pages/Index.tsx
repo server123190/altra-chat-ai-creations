@@ -65,14 +65,7 @@ const Index = () => {
     return <LandingPage onSignIn={handleSignIn} />;
   }
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header user={user} onSignOut={handleSignOut} />
-      <main className="flex-1">
-        <ChatInterface />
-      </main>
-    </div>
-  );
+  return <ChatInterface user={user} onSignOut={handleSignOut} />;
 };
 
 export default Index;
