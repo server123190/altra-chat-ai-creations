@@ -149,6 +149,21 @@ const ChatInterface = ({ user, onSignOut }: ChatInterfaceProps) => {
     setIsTyping(true);
 
     try {
+      // Detect if user wants to generate an image
+      const lowerContent = userMessage.content.toLowerCase();
+      const isImageRequest = 
+        lowerContent.includes('generate image') ||
+        lowerContent.includes('create image') ||
+        lowerContent.includes('draw') ||
+        lowerContent.includes('generate a picture') ||
+        lowerContent.includes('create a picture') ||
+        lowerContent.includes('make an image') ||
+        lowerContent.includes('generate an image') ||
+        lowerContent.includes('create an image') ||
+        lowerContent.match(/^(draw|generate|create|make)\s+(a|an|me)?\s*(image|picture|photo|illustration)/);
+
+      const mode = isImageRequest ? 'image' : 'chat';
+
       // Call edge function
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-ai`, {
         method: 'POST',
@@ -158,15 +173,21 @@ const ChatInterface = ({ user, onSignOut }: ChatInterfaceProps) => {
         },
         body: JSON.stringify({
           message: userMessage.content,
-          mode: 'chat'
+          mode
         })
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to get AI response');
       }
 
       const data = await response.json();
+      
+      // Check for error in response
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
       let aiContent = data.response;
       

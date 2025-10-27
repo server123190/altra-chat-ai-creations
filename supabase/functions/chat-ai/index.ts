@@ -46,13 +46,33 @@ serve(async (req) => {
       }
 
       const data = await response.json();
-      console.log('Image generation response:', JSON.stringify(data));
+      console.log('Image generation response:', JSON.stringify(data, null, 2));
       
-      const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+      // Check for images in the response
+      const images = data.choices?.[0]?.message?.images;
+      const imageUrl = images?.[0]?.image_url?.url;
       
       if (!imageUrl) {
-        console.error('No image URL in response:', data);
-        throw new Error('No image was generated');
+        console.error('No image URL found. Full response:', JSON.stringify(data, null, 2));
+        
+        // Check if there's an error in the response
+        if (data.error) {
+          throw new Error(`Image generation failed: ${data.error.message || JSON.stringify(data.error)}`);
+        }
+        
+        // Check if response has content but no image
+        const textContent = data.choices?.[0]?.message?.content;
+        if (textContent) {
+          return new Response(
+            JSON.stringify({ 
+              response: `I couldn't generate an image. The AI responded: ${textContent}`,
+              type: 'text'
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        
+        throw new Error('No image was generated. The model may not support image generation or the request was rejected.');
       }
 
       return new Response(
