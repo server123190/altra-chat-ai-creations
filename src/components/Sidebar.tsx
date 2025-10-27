@@ -1,7 +1,9 @@
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
-import { Plus, MessageSquare, Trash2, LogOut } from "lucide-react";
+import { Plus, MessageSquare, Trash2, LogOut, Download } from "lucide-react";
 import { User } from "firebase/auth";
+import { useState, useEffect } from "react";
+import { useToast } from "./ui/use-toast";
 
 interface Chat {
   id: string;
@@ -30,6 +32,50 @@ const Sidebar = ({
   onSignOut,
   isOpen = false
 }: SidebarProps) => {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallButton(false);
+    }
+
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      toast({
+        title: "Install AltraChat",
+        description: "Use your browser's menu to install this app",
+      });
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      toast({
+        title: "Success!",
+        description: "AltraChat has been installed",
+      });
+      setShowInstallButton(false);
+    }
+    
+    setDeferredPrompt(null);
+  };
+
   return (
     <div className={`w-[280px] bg-sidebar-bg border-r border-border flex flex-col h-full fixed lg:relative z-50 transition-transform lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Header */}
@@ -41,7 +87,7 @@ const Sidebar = ({
       </div>
 
       {/* New Chat Button */}
-      <div className="p-4">
+      <div className="p-4 space-y-2">
         <Button
           onClick={onNewChat}
           className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl"
@@ -49,6 +95,17 @@ const Sidebar = ({
           <Plus className="w-4 h-4 mr-2" />
           New Chat
         </Button>
+        
+        {showInstallButton && (
+          <Button
+            onClick={handleInstallClick}
+            variant="outline"
+            className="w-full rounded-xl"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Install App
+          </Button>
+        )}
       </div>
 
       {/* Chat History */}

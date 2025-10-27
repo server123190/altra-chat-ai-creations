@@ -18,6 +18,31 @@ const Message = ({ content, sender, timestamp }: MessageProps) => {
   };
 
   const formatContent = (text: string) => {
+    // Check if content has images (markdown or base64)
+    if (text.includes('![') || text.includes('data:image')) {
+      const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+      const parts = text.split(imageRegex);
+      
+      return parts.map((part, index) => {
+        // Every third item starting from index 2 is an image URL
+        if (index % 3 === 2) {
+          return (
+            <img 
+              key={index}
+              src={part}
+              alt={parts[index - 1] || 'Generated image'}
+              className="my-3 rounded-lg max-w-full h-auto"
+              style={{ maxHeight: '400px', objectFit: 'contain' }}
+            />
+          );
+        } else if (index % 3 === 1) {
+          // Skip alt text as it's used in the img tag
+          return null;
+        }
+        return <span key={index}>{part}</span>;
+      });
+    }
+    
     // Check if content has code blocks
     if (text.includes('```')) {
       const parts = text.split('```');

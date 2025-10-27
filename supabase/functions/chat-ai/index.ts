@@ -32,22 +32,31 @@ serve(async (req) => {
           messages: [
             { 
               role: 'user', 
-              content: `Generate a high-quality image based on this description: ${message}` 
+              content: message 
             }
           ],
           modalities: ['image', 'text']
         }),
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Image generation error:', errorText);
+        throw new Error(`Failed to generate image: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('Image generation response:', JSON.stringify(data));
+      
       const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
       
       if (!imageUrl) {
-        throw new Error('Failed to generate image');
+        console.error('No image URL in response:', data);
+        throw new Error('No image was generated');
       }
 
       return new Response(
-        JSON.stringify({ response: imageUrl }),
+        JSON.stringify({ response: imageUrl, type: 'image' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else if (mode === 'code') {

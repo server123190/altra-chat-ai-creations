@@ -168,8 +168,15 @@ const ChatInterface = ({ user, onSignOut }: ChatInterfaceProps) => {
 
       const data = await response.json();
 
+      let aiContent = data.response;
+      
+      // If it's an image response, format it as markdown image
+      if (data.type === 'image' && aiContent.startsWith('data:image')) {
+        aiContent = `![Generated Image](${aiContent})`;
+      }
+
       const aiMessage: ChatMessage = {
-        content: data.response,
+        content: aiContent,
         sender: 'ai',
         timestamp: new Date().toISOString()
       };
