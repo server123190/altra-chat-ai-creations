@@ -164,6 +164,16 @@ const ChatInterface = ({ user, onSignOut }: ChatInterfaceProps) => {
 
       const mode = isImageRequest ? 'image' : 'chat';
 
+      // Show feedback for image generation
+      if (mode === 'image') {
+        toast({
+          title: "Generating Image",
+          description: "Creating your image, this may take a moment...",
+        });
+      }
+
+      console.log('Sending request with mode:', mode, 'for message:', userMessage.content);
+
       // Call edge function
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-ai`, {
         method: 'POST',

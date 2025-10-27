@@ -20,7 +20,41 @@ serve(async (req) => {
 
     // Handle different modes
     if (mode === 'image') {
-      // Image generation mode
+      console.log('Image generation requested for:', message);
+      
+      // Image generation mode - extract just the description from the prompt
+      let imagePrompt = message;
+      const lowerMessage = message.toLowerCase();
+      
+      // Remove common image generation trigger phrases to get just the description
+      const triggers = [
+        'generate an image of',
+        'generate image of',
+        'create an image of',
+        'create image of',
+        'draw an image of',
+        'draw image of',
+        'make an image of',
+        'make image of',
+        'generate a picture of',
+        'create a picture of',
+        'draw a picture of',
+        'make a picture of',
+        'generate',
+        'create',
+        'draw',
+        'make'
+      ];
+      
+      for (const trigger of triggers) {
+        if (lowerMessage.startsWith(trigger)) {
+          imagePrompt = message.substring(trigger.length).trim();
+          break;
+        }
+      }
+      
+      console.log('Cleaned image prompt:', imagePrompt);
+      
       const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -32,7 +66,7 @@ serve(async (req) => {
           messages: [
             { 
               role: 'user', 
-              content: message 
+              content: `Generate a high-quality image of: ${imagePrompt}` 
             }
           ],
           modalities: ['image', 'text']
