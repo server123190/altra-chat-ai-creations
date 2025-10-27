@@ -46,8 +46,14 @@ const Sidebar = ({
     window.addEventListener('beforeinstallprompt', handler);
 
     // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    
+    if (isStandalone) {
       setShowInstallButton(false);
+    } else if (!isIOS) {
+      // Show button immediately on non-iOS devices (beforeinstallprompt may not fire immediately)
+      setShowInstallButton(true);
     }
 
     return () => window.removeEventListener('beforeinstallprompt', handler);
